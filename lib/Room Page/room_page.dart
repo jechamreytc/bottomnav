@@ -26,19 +26,6 @@ class RoomPage extends StatefulWidget {
 // ROOM CREATOR PAGE
 
 class _RoomPageState extends State<RoomPage> {
-  late Future<List<dynamic>> _pendingParticipantsFuture;
-  @override
-  void initState() {
-    super.initState();
-    _pendingParticipantsFuture = _getPendingParticipants();
-  }
-
-  void _refreshPendingParticipants() {
-    setState(() {
-      _pendingParticipantsFuture = _getPendingParticipants();
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,45 +61,6 @@ class _RoomPageState extends State<RoomPage> {
               SizedBox(
                 height: 30,
               ),
-              ElevatedButton(
-                onPressed: _refreshPendingParticipants,
-                child: Text('Refresh Pending Participants'),
-              ),
-
-              // Pending Participants Section
-              FutureBuilder<List<dynamic>>(
-                future: _pendingParticipantsFuture,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return CircularProgressIndicator();
-                  } else if (snapshot.hasError) {
-                    return Text(
-                      "Error: ${snapshot.error}",
-                    );
-                  } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-                    return ListView.builder(
-                      shrinkWrap: true, // Required within Column
-                      physics:
-                          NeverScrollableScrollPhysics(), // Disables scrolling within ListView
-                      itemCount: snapshot.data!.length,
-                      itemBuilder: (context, index) {
-                        var participant = snapshot.data![index];
-                        return ListTile(
-                          title: Text(participant["name"] ?? "N/A"),
-                          subtitle: Text(
-                              "Status: ${participant["status"] ?? "unknown"}"),
-                        );
-                      },
-                    );
-                  } else {
-                    return Text(
-                      "No pending participants found.",
-                    );
-                  }
-                },
-              ),
-
-              // Navigation Button
               ElevatedButton(
                 onPressed: () {
                   Navigator.pushReplacement(
@@ -225,28 +173,5 @@ class _RoomPageState extends State<RoomPage> {
         );
       },
     );
-  }
-
-  Future<List<dynamic>> _getPendingParticipants() async {
-    try {
-      var url = Uri.parse("${SessionStorage.url}admin.php");
-      Map<String, dynamic> jsonData = {
-        "team_roomId": "7",
-      }; // Use the actual roomCode from widget
-      Map<String, dynamic> requestBody = {
-        "json": jsonEncode(jsonData),
-        "operation": "getPendingParticipants",
-      };
-
-      var response = await http.post(url, body: requestBody);
-      print("Response: ${response.body}");
-      if (response.body != "0" && response.statusCode == 200) {
-        List<dynamic> data = jsonDecode(response.body);
-        return data;
-      }
-    } catch (e) {
-      print("Error fetching participants: " + e.toString());
-    }
-    return [];
   }
 }

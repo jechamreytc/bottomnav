@@ -25,13 +25,6 @@ class _LoginAdminState extends State<LoginAdmin> {
       body: Center(
         child: Column(
           children: [
-            Text(
-              "Campus Conquest",
-              style: TextStyle(
-                fontSize: 30,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
             Card(
               child: Container(
                 padding: EdgeInsets.all(20),

@@ -9,7 +9,9 @@ import 'package:bottomnav/QRCodeGenerator/qrcode_generator.dart';
 import 'package:bottomnav/Room%20Page/create_room_page.dart';
 import 'package:bottomnav/Room%20Page/room_page.dart';
 import 'package:bottomnav/Security/login_admin.dart';
+import 'package:bottomnav/User%20Side/user_chamber.dart';
 import 'package:bottomnav/User%20Side/user_room.dart';
+import 'package:bottomnav/jabulan.dart';
 import 'package:flutter/material.dart';
 
 void main() {
