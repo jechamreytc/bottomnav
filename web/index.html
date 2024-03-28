@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <!--
     If you are serving your web app in a path other than the root, change the
@@ -27,7 +28,7 @@
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
   <!-- Favicon -->
-  <link rel="icon" type="image/png" href="favicon.png"/>
+  <link rel="icon" type="image/png" href="favicon.png" />
 
   <title>bottomnav</title>
   <link rel="manifest" href="manifest.json">
@@ -38,17 +39,29 @@
   </script>
   <!-- This script adds the flutter initialization JS code -->
   <script src="flutter.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/jsqr@1.3.1/dist/jsQR.js"></script>
 </head>
+
 <body>
   <script>
-    window.addEventListener('load', function(ev) {
+    // Example JavaScript function to generate a QR code. You must replace it with actual code using a QR code library.
+    function generateQRCodeBase64(data, callback) {
+      // Imagine this is using a real JS library to generate the QR code.
+      // The "callback" argument is a function that will be called with the Base64 encoded image.
+      const base64 = btoa("Fake QR Code Image Data for " + data); // Placeholder for actual generation
+      callback(base64);
+    }
+  </script>
+
+  <script>
+    window.addEventListener('load', function (ev) {
       // Download main.dart.js
       _flutter.loader.loadEntrypoint({
         serviceWorker: {
           serviceWorkerVersion: serviceWorkerVersion,
         },
-        onEntrypointLoaded: function(engineInitializer) {
-          engineInitializer.initializeEngine().then(function(appRunner) {
+        onEntrypointLoaded: function (engineInitializer) {
+          engineInitializer.initializeEngine().then(function (appRunner) {
             appRunner.runApp();
           });
         }
@@ -56,4 +69,5 @@
     });
   </script>
 </body>
+
 </html>

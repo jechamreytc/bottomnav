@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Page2 extends StatefulWidget {
-  const Page2({ Key? key }) : super(key: key);
+  const Page2({ super.key });
 
   @override
   _Page2State createState() => _Page2State();
@@ -10,7 +10,7 @@ class Page2 extends StatefulWidget {
 class _Page2State extends State<Page2> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: Center(child: Text("Page2"),),
     );
   }

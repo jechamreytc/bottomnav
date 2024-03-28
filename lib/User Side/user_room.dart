@@ -1,9 +1,7 @@
 import 'dart:convert';
 
 import 'package:bottomnav/Main%20Page/main_page.dart';
-import 'package:bottomnav/QR%20CODE/qr_code_scanner.dart';
 import 'package:bottomnav/session_storage.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -13,11 +11,11 @@ class UserRoom extends StatefulWidget {
   final int roomId;
 
   const UserRoom({
-    Key? key,
+    super.key,
     required this.roomName,
     required this.roomDesc,
     required this.roomId,
-  }) : super(key: key);
+  });
 
   @override
   _UserRoomState createState() => _UserRoomState();
@@ -33,10 +31,10 @@ class _UserRoomState extends State<UserRoom> {
           children: [
             Card(
               child: Container(
-                padding: EdgeInsets.all(20),
+                padding: const EdgeInsets.all(20),
                 child: Column(
                   children: [
-                    Row(
+                    const Row(
                       children: [
                         Text(
                           "Title",
@@ -61,27 +59,27 @@ class _UserRoomState extends State<UserRoom> {
                       children: [
                         Text(
                           widget.roomName,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 15,
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 30,
                         ),
                         Text(
                           widget.roomDesc,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 15,
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 170,
                         ),
                         ElevatedButton(
                           onPressed: () {
                             joinRoomAlertDialog();
                           },
-                          child: Text("Join Game"),
+                          child: const Text("Join Game"),
                         ),
                       ],
                     ),
@@ -145,7 +143,7 @@ class _UserRoomState extends State<UserRoom> {
             //     ],
             //   ),
             // ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             ElevatedButton(
@@ -153,11 +151,11 @@ class _UserRoomState extends State<UserRoom> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => MainPage(),
+                    builder: (context) => const MainPage(),
                   ),
                 );
               },
-              child: Text("Exit"),
+              child: const Text("Exit"),
             ),
           ],
         ),
@@ -166,11 +164,11 @@ class _UserRoomState extends State<UserRoom> {
   }
 
   void joinRoomAlertDialog() {
-    TextEditingController _teamNameController = TextEditingController();
+    TextEditingController teamNameController = TextEditingController();
     void createTeam() async {
       try {
         Map<String, String> jsonData = {
-          "team_name": _teamNameController.text,
+          "team_name": teamNameController.text,
           "team_roomId": widget.roomId.toString(),
         };
         Map<String, String> requestBody = {
@@ -194,12 +192,12 @@ class _UserRoomState extends State<UserRoom> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Enter Team Name"),
+          title: const Text("Enter Team Name"),
           content: Column(
             children: [
               TextField(
-                controller: _teamNameController,
-                decoration: InputDecoration(
+                controller: teamNameController,
+                decoration: const InputDecoration(
                   labelText: "Team Name",
                   border: OutlineInputBorder(),
                 ),
@@ -208,7 +206,7 @@ class _UserRoomState extends State<UserRoom> {
                 onPressed: () {
                   createTeam();
                 },
-                child: Text(
+                child: const Text(
                   "Create Team",
                 ),
               ),

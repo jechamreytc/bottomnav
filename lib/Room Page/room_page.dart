@@ -1,177 +1,342 @@
 import 'dart:convert';
-
-import 'package:bottomnav/Main%20Page/main_page.dart';
-import 'package:bottomnav/local_storage.dart';
-import 'package:bottomnav/session_storage.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
+import 'package:bottomnav/Room%20Page/final_room_page.dart';
+import 'package:qr_flutter/qr_flutter.dart';
+import 'package:bottomnav/session_storage.dart';
+import 'dart:ui';
 
 class RoomPage extends StatefulWidget {
   final String roomName;
   final String roomCode;
   final String roomDesc;
+  final int roomId;
+  final String roomStatus;
 
   const RoomPage({
     Key? key,
     required this.roomName,
     required this.roomCode,
     required this.roomDesc,
+    required this.roomId,
+    required this.roomStatus,
   }) : super(key: key);
 
   @override
   _RoomPageState createState() => _RoomPageState();
 }
 
-// ROOM CREATOR PAGE
-
 class _RoomPageState extends State<RoomPage> {
+  final _riddleController = TextEditingController();
+  final _answerController = TextEditingController();
+  final _hintController = TextEditingController();
+  List<Map<String, dynamic>> riddlesList = [];
+  bool _isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 122, 180, 124),
-      body: SingleChildScrollView(
-        // For scrollable content
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              // Room details
-              Text(
-                widget.roomName,
-                style: TextStyle(
-                  fontSize: 50,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(
-                height: 30,
-              ),
-              Text(
-                "Code: ${widget.roomCode}",
-              ),
-              Padding(
-                padding: const EdgeInsets.all(
-                  20.0,
-                ),
-                child: Text(
-                  widget.roomDesc,
-                ),
-              ),
-              SizedBox(
-                height: 30,
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => MainPage()),
-                  );
-                },
-                child: Text(
-                  "Leave Room",
-                  style: TextStyle(color: Colors.black),
-                ),
-              ),
-            ],
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: Image.asset(
+              "assets/images/treasureBGmain.png", // Replace with your image path
+              fit: BoxFit.fill,
+            ),
           ),
-        ),
+          Positioned.fill(
+            child: BackdropFilter(
+              filter: ImageFilter.blur(
+                  sigmaX: 2, sigmaY: 2), // Adjust the blur amount as desired
+              child: Container(
+                color: Colors.black.withOpacity(
+                    0.2), // You can adjust the overlay color and opacity
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              children: [
+                // Conditional display of TextFields based on roomStatus
+                widget.roomStatus == "1"
+                    ? TextFormField(
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: 'Cinzel',
+                        ),
+                        controller: _riddleController,
+                        decoration: const InputDecoration(
+                            labelText: "Riddle",
+                            border: OutlineInputBorder(),
+                            labelStyle: TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'Cinzel',
+                            )),
+                      )
+                    : Container(),
+                const SizedBox(height: 20),
+                widget.roomStatus == "1"
+                    ? TextFormField(
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: 'Cinzel',
+                        ),
+                        controller: _answerController,
+                        decoration: const InputDecoration(
+                          labelText: "Riddle Answer",
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                            color: Colors.white,
+                          )),
+                          labelStyle: TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'Cinzel',
+                          ),
+                        ),
+                      )
+                    : Container(),
+                const SizedBox(height: 20),
+                TextFormField(
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontFamily: 'Cinzel',
+                  ),
+                  controller: _hintController,
+                  decoration: const InputDecoration(
+                    labelText: "Hint",
+                    border: OutlineInputBorder(),
+                    labelStyle: TextStyle(
+                      color: Colors.white,
+                      fontFamily: 'Cinzel',
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                InkWell(
+                  onTap: () {
+                    _addRiddleToList();
+                  },
+                  child: Container(
+                    width: 200,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 137, 113, 44)
+                          .withOpacity(1),
+                      borderRadius: BorderRadius.circular(50.0),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.5),
+                          spreadRadius: 0,
+                          blurRadius: 8,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(50.0),
+                          child: Image.asset(
+                            'assets/images/buttonBG3.jpg',
+                            width: 200,
+                            height: 50,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.only(
+                            left: 40,
+                            right: 40,
+                            top: 10,
+                            bottom: 10,
+                          ),
+                          child: Text(
+                            "Add to List",
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.white,
+                              fontFamily: 'Cinzel',
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                _createDataTable(), // Ensure this function is defined elsewhere in your widget
+                const SizedBox(height: 20),
+                InkWell(
+                  onTap: () {
+                    _submitRiddles();
+                  },
+                  child: Container(
+                    width: 200,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 137, 113, 44)
+                          .withOpacity(1),
+                      borderRadius: BorderRadius.circular(50.0),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.5),
+                          spreadRadius: 0,
+                          blurRadius: 8,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(50.0),
+                          child: Image.asset(
+                            'assets/images/buttonBG3.jpg',
+                            width: 200,
+                            height: 50,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.only(
+                            left: 40,
+                            right: 40,
+                            top: 10,
+                            bottom: 10,
+                          ),
+                          child: Text(
+                            "Create Final",
+                            style: TextStyle(
+                              fontSize: 13.5,
+                              color: Colors.white,
+                              fontFamily: 'Cinzel',
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  void _addRiddleAlert() {
-    final TextEditingController _addRiddleController = TextEditingController();
-    final TextEditingController _addAnswersController = TextEditingController();
-    final LocalStorage _localStorage = LocalStorage();
-
-    final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-    bool _isLoading = false;
-
-    void addRiddle() async {
-      setState(() {
-        _isLoading = false;
+  void _addRiddleToList() {
+    print("rid_answer: ${_answerController.text}");
+    print("rid_riddle: ${_riddleController.text}");
+    setState(() {
+      riddlesList.add({
+        "rid_roomId": widget.roomId.toString(),
+        "rid_riddle":
+            _riddleController.text == "" ? "" : _riddleController.text,
+        "rid_answer":
+            _answerController.text == "" ? "" : _answerController.text,
+        "rid_hint": _hintController.text,
       });
-      try {
-        Map<String, String> jsonData = {
-          "rid_riddle": _addRiddleController.text,
-          "rid_answer": _addAnswersController.text,
-          // "rid_roomId": _localStorage.getValue("rid_roomId"),
-        };
-        Map<String, String> requestBody = {
-          "json": jsonEncode(jsonData),
-          "operation": "addRiddle",
-        };
-        var res = await http.post(
-          Uri.parse("${SessionStorage.url}user.php"),
-          body: requestBody,
-        );
-        if (res.body != "0") {
-          print("Success");
-          // _addRiddleController.clear();
-          // _addAnswersController.clear();
-          print(jsonData);
-        }
-      } catch (e) {
-        print(e);
-      }
-    }
+      _riddleController.clear();
+      _answerController.clear();
+      _hintController.clear();
+    });
+  }
 
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              AlertDialog(
-                title: Text(
-                  "Create Room",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 30,
-                  ),
-                ),
-                content: Center(
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: 20,
-                      ),
-                      TextField(
-                        controller: _addRiddleController,
-                        decoration: InputDecoration(
-                          border: const OutlineInputBorder(),
-                          labelText: "Riddle",
-                        ),
-                      ),
-                      SizedBox(
-                        height: 30,
-                      ),
-                      TextField(
-                        controller: _addAnswersController,
-                        decoration: InputDecoration(
-                          border: const OutlineInputBorder(),
-                          labelText: "Riddle Answer",
-                        ),
-                      ),
-                      SizedBox(
-                        height: 30,
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          addRiddle();
-                        },
-                        child: Text("Save"),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
+  Future<void> _submitRiddles() async {
+    if (riddlesList.isEmpty) return;
+    setState(() => _isLoading = true);
+    try {
+      final response = await http.post(
+        Uri.parse("${SessionStorage.url}user.php"),
+        body: {
+          "json": jsonEncode({"riddles": riddlesList}),
+          "operation": "addRiddle",
+        },
+      );
+
+      if (response.statusCode == 200 && response.body != "0") {
+        print('Server response: ${response.body}');
+        var responseBody = jsonDecode(response.body);
+        List<String> scanCodes = List<String>.from(responseBody["scanCodes"]);
+
+        // Assuming riddlesList is updated to include 'scanCode' for each riddle
+        for (int i = 0; i < riddlesList.length; i++) {
+          riddlesList[i]['scanCode'] = scanCodes[i];
+        }
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => FinalRoomPage(
+              roomId: widget.roomId,
+              roomName: widget.roomName,
+              roomCode: widget.roomCode,
+              roomDesc: widget.roomDesc,
+              riddleDetails: riddlesList, // Updated parameter
+            ),
           ),
         );
-      },
+
+        // setState(() => riddlesList.clear());
+      } else {
+        print('Server error or empty response: ${response.body}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
+
+  Widget _createDataTable() {
+    return DataTable(
+      columns: const [
+        DataColumn(label: Text('Riddle')),
+        DataColumn(label: Text('Answer')),
+        DataColumn(label: Text('Hint')),
+        DataColumn(label: Text('Actions')),
+      ],
+      rows: riddlesList.asMap().entries.map((entry) {
+        final idx = entry.key;
+        final riddle = entry.value;
+        return DataRow(cells: [
+          DataCell(
+            Text(
+              riddle['rid_riddle'] ?? '',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+          ),
+          DataCell(
+            Text(
+              riddle['rid_answer'] ?? '',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+          ),
+          DataCell(
+            Text(
+              riddle['rid_hint'] ?? '',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+          ),
+          DataCell(IconButton(
+            icon: const Icon(Icons.delete),
+            onPressed: () => setState(
+              () => riddlesList.removeAt(idx),
+            ),
+          )),
+        ]);
+      }).toList(),
     );
   }
 }

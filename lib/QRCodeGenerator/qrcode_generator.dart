@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class QrcodeGenerator extends StatefulWidget {
-  const QrcodeGenerator({Key? key}) : super(key: key);
+  const QrcodeGenerator({super.key});
 
   @override
   _QrcodeGeneratorState createState() => _QrcodeGeneratorState();
@@ -15,7 +15,7 @@ class _QrcodeGeneratorState extends State<QrcodeGenerator> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           "CSDL Attendance",
         ),
         centerTitle: true,
@@ -34,8 +34,8 @@ class _QrcodeGeneratorState extends State<QrcodeGenerator> {
               ),
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 50),
-            Container(
+            const SizedBox(height: 50),
+            SizedBox(
               width: 300.0,
               child: TextField(
                 onChanged: (value) {
@@ -46,7 +46,7 @@ class _QrcodeGeneratorState extends State<QrcodeGenerator> {
                   );
                 },
                 textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.black),
+                style: const TextStyle(color: Colors.black),
                 decoration: const InputDecoration(
                     hintText: "I.D Number",
                     filled: true,
@@ -54,17 +54,17 @@ class _QrcodeGeneratorState extends State<QrcodeGenerator> {
                     border: InputBorder.none),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 50.0,
             ),
             RawMaterialButton(
               fillColor: Colors.white,
-              shape: StadiumBorder(),
-              padding: EdgeInsets.symmetric(
+              shape: const StadiumBorder(),
+              padding: const EdgeInsets.symmetric(
                 horizontal: 36.0,
                 vertical: 16.0,
               ),
-              child: Text("Generate QR Code"),
+              child: const Text("Generate QR Code"),
               onPressed: () {
                 showDialog(
                   context: context,
@@ -86,7 +86,7 @@ class _QrcodeGeneratorState extends State<QrcodeGenerator> {
 class QRCodeGenerator extends StatefulWidget {
   final String idNumber;
 
-  QRCodeGenerator({
+  const QRCodeGenerator({super.key, 
     required this.idNumber,
   });
 
@@ -101,7 +101,7 @@ class _QRCodeGeneratorState extends State<QRCodeGenerator> {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text(
+        const Text(
           "Q.R CODE",
           style: TextStyle(
             color: Colors.black,
@@ -109,10 +109,10 @@ class _QRCodeGeneratorState extends State<QRCodeGenerator> {
             backgroundColor: Colors.white,
           ),
         ),
-        SizedBox(
+        const SizedBox(
           height: 20.0,
         ),
-        SizedBox(
+        const SizedBox(
           height: 50,
         ),
         Center(
@@ -122,7 +122,7 @@ class _QRCodeGeneratorState extends State<QRCodeGenerator> {
             size: 200.0,
           ),
         ),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
       ],
     );
   }

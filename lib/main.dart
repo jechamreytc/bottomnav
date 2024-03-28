@@ -5,13 +5,13 @@ import 'package:bottomnav/Page/page3.dart';
 import 'package:bottomnav/Page/page4.dart';
 import 'package:bottomnav/Page/page5.dart';
 import 'package:bottomnav/QR%20CODE/qr_code_scanner.dart';
-import 'package:bottomnav/QRCodeGenerator/qrcode_generator.dart';
+import 'package:bottomnav/QR%20CODE/qr_code_scanner_1.dart';
+import 'package:bottomnav/QR%20CODE/qr_code_scanner_2.dart';
 import 'package:bottomnav/Room%20Page/create_room_page.dart';
 import 'package:bottomnav/Room%20Page/room_page.dart';
 import 'package:bottomnav/Security/login_admin.dart';
+import 'package:bottomnav/Security/sign_up.dart';
 import 'package:bottomnav/User%20Side/user_chamber.dart';
-import 'package:bottomnav/User%20Side/user_room.dart';
-import 'package:bottomnav/jabulan.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -19,11 +19,11 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
       home: MainPage(),
     );
@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
 }
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -40,11 +40,11 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 2;
   final List<Widget> _pages = [
-    Page1(),
-    Page2(),
-    Page3(),
-    Page4(),
-    Page5(),
+    const Page1(),
+    const Page2(),
+    const Page3(),
+    const Page4(),
+    const Page5(),
   ];
 
   void _onItemTapped(int index) {
@@ -121,14 +121,16 @@ class _HomePageState extends State<HomePage> {
                 ],
                 currentIndex: _selectedIndex,
                 onTap: _onItemTapped,
-                selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
-                unselectedLabelStyle: TextStyle(fontWeight: FontWeight.normal),
+                selectedLabelStyle:
+                    const TextStyle(fontWeight: FontWeight.bold),
+                unselectedLabelStyle:
+                    const TextStyle(fontWeight: FontWeight.normal),
                 selectedFontSize: 14,
                 unselectedFontSize: 12,
                 showSelectedLabels: false,
                 showUnselectedLabels: false,
-                selectedIconTheme: IconThemeData(size: 35),
-                unselectedIconTheme: IconThemeData(size: 20),
+                selectedIconTheme: const IconThemeData(size: 35),
+                unselectedIconTheme: const IconThemeData(size: 20),
                 backgroundColor: Colors.grey[200],
               ),
               Positioned(
